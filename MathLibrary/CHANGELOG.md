@@ -1,5 +1,12 @@
 
 
+## 1.1.3 (2024-10-22)
+
+
+### Bug Fixes
+
+* isdft ([18ce3af](https://github.com/Biplav-05/dotnet_sdk_test/commit/18ce3afb59891a959dcf1a238206201571d23cdd))
+
 ## [1.1.2](https://github.com/Biplav-05/dotnet_sdk_test/compare/V1.1.2-rc.0...V1.1.2) (2024-10-22)
 
 ## [1.1.2-rc.0](https://github.com/Biplav-05/dotnet_sdk_test/compare/V1.1.1...V1.1.2-rc.0) (2024-10-22)
