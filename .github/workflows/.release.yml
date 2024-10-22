@@ -76,7 +76,7 @@ jobs:
         if: success()
         run: echo "Release and publishing completed successfully!"
 
-      # If the release step fails, print an error message
+      # Handle failure
       - name: Handle failure
         if: failure()
-        run: echo "Release process failed."
+        run: echo "Release process failed. Check the logs for details."
