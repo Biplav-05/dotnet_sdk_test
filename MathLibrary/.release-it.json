@@ -18,7 +18,7 @@
         "dotnet pack -o ./nupkgs"
       ],
       "after:release": [
-        "dotnet nuget push ./nupkgs/abcTestHello.${version}.nupkg --api-key \"$NUGET_API_KEY\" -s https://api.nuget.org/v3/index.json"
+        "dotnet nuget push ./nupkgs/biplavghimiretestsdk.${version}.nupkg --api-key \"$NUGET_API_KEY\" -s https://api.nuget.org/v3/index.json"
       ]
     },
     "git": {
