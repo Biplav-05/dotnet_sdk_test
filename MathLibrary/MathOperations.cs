@@ -6,7 +6,7 @@ namespace MathLibrary
     {
         public int Add(int a, int b)
         {
-            return a + b;
+            return a + b*2;
         }
 
         public int Subtract(int a, int b)
