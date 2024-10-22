@@ -13,15 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RELEASE_TYPE: ${{ github.event.inputs.release-type }}
-    
-    # permissions:
-    #     contents: write
-    #     actions: write
+  
     steps:
       # Validate the branch
       - name: Validate branch
         run: |
-          if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
+          if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
+
             echo "Error: This workflow can only be run on the main branch."
             exit 1
           fi
