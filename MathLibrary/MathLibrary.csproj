@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet package metadata -->
+    <PackageId>abcTestHello</PackageId>
+    <Version>0.2.2-alpha.0</Version>
+    <Authors>YourName</Authors>
+    <Description>A simple math library for addition and subtraction</Description>
+  </PropertyGroup>
+</Project>

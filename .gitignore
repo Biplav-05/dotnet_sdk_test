@@ -1,0 +1,49 @@
+# Ignore build outputs
+bin/
+obj/
+*.log
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider and Resharper files
+.idea/
+*.sln.iml
+
+# Auto-generated files
+Generated_Code/
+coverage/
+TestResults/
+*.coverage
+*.coveragexml
+*.coverlet.trx
+
+# NuGet packages
+*.nupkg
+.nuget/
+
+# Node.js dependencies
+node_modules/
+
+# Windows image file caches
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Folder config file
+Desktop.ini
+$RECYCLE.BIN/
+
+# VS Code files
+.vscode/
+
+# Mac OS files
+.DS_Store
+
+# Other
+*.tmp
