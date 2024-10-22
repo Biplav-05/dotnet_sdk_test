@@ -19,10 +19,11 @@ jobs:
       - name: Validate branch
         run: |
           if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
+
             echo "Error: This workflow can only be run on the main branch."
             exit 1
           fi
-
+          
       # Validate the release type
       - name: Validate release type
         run: |
@@ -30,12 +31,6 @@ jobs:
             echo "Error: Invalid release type '$RELEASE_TYPE'. It must be one of: regular, alpha, beta, or rc."
             exit 1
           fi
-
-      # Debug variables
-      - name: Debug variables
-        run: |
-          echo "Branch: ${{ github.ref }}"
-          echo "Release Type: $RELEASE_TYPE"
 
       # Checkout source code
       - name: Checkout source code
