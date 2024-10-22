@@ -1,5 +1,12 @@
 
 
+# 1.2.0-rc.0 (2024-10-22)
+
+
+### Features
+
+* abc ([e5e3f36](https://github.com/Biplav-05/dotnet_sdk_test/commit/e5e3f36274e4971a59a88c8aa237a5c25d41a02e))
+
 ## 1.1.3 (2024-10-22)
 
 

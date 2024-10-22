@@ -1,6 +1,6 @@
 {
   "name": "biplavghimiretestsdk",
-  "version": "1.1.3",
+  "version": "1.2.0-rc.0",
   "devDependencies": {
     "@release-it/conventional-changelog": "^9.0.1",
     "release-it": "^17.10.0"
