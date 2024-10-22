@@ -6,7 +6,7 @@
 
     <!-- NuGet package metadata -->
     <PackageId>biplavghimiretestsdk</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>YourName</Authors>
     <Description>A simple math library for addition and subtraction</Description>
   </PropertyGroup>
