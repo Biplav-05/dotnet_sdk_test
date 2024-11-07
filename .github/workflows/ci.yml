@@ -1,0 +1,65 @@
+name: .NET Code Quality Checks
+
+on:
+  pull_request:
+    branches: main
+
+jobs:
+  format:
+    name: Code Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+          
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format
+          
+      - name: Check formatting
+        run: dotnet format --verify-no-changes --verbosity detailed
+
+  code-analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+      
+      - name: Restore dependencies
+        run: dotnet restore
+        
+      - name: Add analyzers
+        run: |
+          dotnet add package StyleCop.Analyzers
+          dotnet add package Microsoft.CodeAnalysis.NetAnalyzers
+        
+      - name: Build with analysis
+        run: dotnet build --no-restore /warnaserror /p:TreatWarningsAsErrors=true /p:EnforceCodeStyleInBuild=true
+
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+      
+      - name: Restore dependencies
+        run: dotnet restore
+        
+      - name: Install Roslynator
+        run: dotnet tool install -g roslynator.dotnet.cli
+        
+      - name: Run Roslynator analysis
+        run: roslynator analyze --output roslynator-report.json
+        
+      - name: Install FxCop
+        run: dotnet add package Microsoft.CodeAnalysis.FxCopAnalyzers
+        
+      - name: Build with FxCop
+        run: dotnet build /p:RunAnalyzers=true /p:RunCodeAnalysis=true
