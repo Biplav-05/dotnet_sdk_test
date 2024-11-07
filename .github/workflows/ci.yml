@@ -1,0 +1,93 @@
+name: .NET Code Quality Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  format:
+    name: Code Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format
+
+      - name: Check formatting
+        working-directory: MathLibrary
+        run: |
+          dotnet format --verify-no-changes --verbosity detailed --project "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/MathLibrary/MathLibrary.csproj"
+
+  code-analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        working-directory: MathLibrary
+        run: dotnet restore "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln"
+
+      - name: Add analyzers
+        working-directory: MathLibrary
+        run: |
+          dotnet add package StyleCop.Analyzers -p "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/MathLibrary/MathLibrary.csproj"
+          dotnet add package Microsoft.CodeAnalysis.NetAnalyzers -p "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/MathLibrary/MathLibrary.csproj"
+
+      - name: Build with analysis
+        working-directory: MathLibrary
+        run: dotnet build "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln" --no-restore /warnaserror /p:TreatWarningsAsErrors=true /p:EnforceCodeStyleInBuild=true
+
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        working-directory: MathLibrary
+        run: dotnet restore "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln"
+
+      - name: Install Roslynator
+        working-directory: MathLibrary
+        run: dotnet tool install -g roslynator.dotnet.cli
+
+      - name: Run Roslynator analysis
+        working-directory: MathLibrary
+        run: roslynator analyze --output roslynator-report.json "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln"
+
+      - name: Install FxCop
+        working-directory: MathLibrary
+        run: dotnet add package Microsoft.CodeAnalysis.FxCopAnalyzers -p "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/MathLibrary/MathLibrary.csproj"
+
+      - name: Build with FxCop
+        working-directory: MathLibrary
+        run: dotnet build "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln" /p:RunAnalyzers=true /p:RunCodeAnalysis=true
+
+      - name: Upload analysis results
+        uses: actions/upload-artifact@v3
+        with:
+          name: static-analysis-results
+          path: roslynator-report.json
+
+  all-checks-passed:
+    name: All Checks Passed
+    needs: [format, code-analysis, static-analysis]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "All code quality checks passed!"
