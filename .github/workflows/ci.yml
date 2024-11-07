@@ -2,7 +2,7 @@ name: .NET Code Quality Checks
 
 on:
   pull_request:
-    branches: main
+    branches:  main
 
 jobs:
   format:
@@ -13,12 +13,15 @@ jobs:
       
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
           
       - name: Install dotnet-format
         run: dotnet tool install -g dotnet-format
           
       - name: Check formatting
-        run: dotnet format --verify-no-changes --verbosity detailed
+        run: |
+          dotnet format --verify-no-changes --verbosity detailed --project "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/MathLibrary/MathLibrary.csproj"
 
   code-analysis:
     name: Code Analysis
@@ -28,17 +31,19 @@ jobs:
       
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
       
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln"
         
       - name: Add analyzers
         run: |
-          dotnet add package StyleCop.Analyzers
-          dotnet add package Microsoft.CodeAnalysis.NetAnalyzers
+          dotnet add package StyleCop.Analyzers -p "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/MathLibrary/MathLibrary.csproj"
+          dotnet add package Microsoft.CodeAnalysis.NetAnalyzers -p "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/MathLibrary/MathLibrary.csproj"
         
       - name: Build with analysis
-        run: dotnet build --no-restore /warnaserror /p:TreatWarningsAsErrors=true /p:EnforceCodeStyleInBuild=true
+        run: dotnet build "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln" --no-restore /warnaserror /p:TreatWarningsAsErrors=true /p:EnforceCodeStyleInBuild=true
 
   static-analysis:
     name: Static Analysis
@@ -48,18 +53,34 @@ jobs:
       
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
       
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln"
         
       - name: Install Roslynator
         run: dotnet tool install -g roslynator.dotnet.cli
         
       - name: Run Roslynator analysis
-        run: roslynator analyze --output roslynator-report.json
+        run: roslynator analyze --output roslynator-report.json "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln"
         
       - name: Install FxCop
-        run: dotnet add package Microsoft.CodeAnalysis.FxCopAnalyzers
+        run: dotnet add package Microsoft.CodeAnalysis.FxCopAnalyzers -p "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/MathLibrary/MathLibrary.csproj"
         
       - name: Build with FxCop
-        run: dotnet build /p:RunAnalyzers=true /p:RunCodeAnalysis=true
+        run: dotnet build "/home/runner/work/dotnet_sdk_test/dotnet_sdk_test/Dotnet.sln" /p:RunAnalyzers=true /p:RunCodeAnalysis=true
+        
+      - name: Upload analysis results
+        uses: actions/upload-artifact@v3
+        with:
+          name: static-analysis-results
+          path: roslynator-report.json
+
+  all-checks-passed:
+    name: All Checks Passed
+    needs: [format, code-analysis, static-analysis]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "All code quality checks passed!"
